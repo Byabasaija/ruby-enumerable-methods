@@ -71,4 +71,15 @@ end
     end
     count
   end
+
+
+  def my_map
+   result = []
+   my_each do |item|
+      result.push(yield item)
+   end
+   result
  end
+
+ end
+
