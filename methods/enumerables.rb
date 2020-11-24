@@ -71,11 +71,4 @@ end
     end
     count
   end
-
-  def my_inject(start = 0)
-		self.each do |item|
-			start = yield(start, item)
-		end
-		start
-	end
  end
