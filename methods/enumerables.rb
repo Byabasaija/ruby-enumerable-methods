@@ -87,10 +87,13 @@ end
    end
    initial
 end
+
+def multiply_els
+   self.my_inject(1) { |initial, item| initial * item }
 end
 
-arr = [5, 6, 7, 8, 9, 10]
-puts arr.my_inject(1) {|initial, item| initial * item}
+end
 
+puts [2,4,5].multiply_els
 
 
