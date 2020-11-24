@@ -7,8 +7,6 @@ module Enumerable
      end
      self
    end
-    arr = [4,4,5,6]
-    arr.my_each {|item| puts item}
 
    def my_each_with_index
       return to_enum(:my_each) unless block_given?
@@ -18,8 +16,12 @@ module Enumerable
       end
       self
    end
-
+  def my_select
+   return to_enum(:my_select) unless block_given?
+   answer = []
+   self.my_each do |item| 
+        answer.push(item) if yield item
+     end
+   answer
+  end
 end
-
-arr = [4,4,5,6]
-arr.my_each_with_index {|item, index| print "#{item} ==> #{index} "}
