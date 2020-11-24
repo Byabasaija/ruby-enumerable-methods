@@ -30,23 +30,29 @@ module Enumerable
 
 
   def my_all?
-   self.my_each do |item|
    return true unless block_given?
-      if !yield item
-         return false
-      end
+   my_each do |item|
+      return false if !yield item
    end
-   return true
+   true
 end
 
-def my_any?
-  
-   self.my_each do |item|
-   return true unless block_given?
-      unless yield item
-         return true
+   def my_any?
+      return true unless block_given?
+      my_each do |item|
+         return true unless yield item
       end
+      false
    end
-   return false
+
+   
+   def my_none?
+      return true unless block_given?
+      my_each do |item|
+         return false if yield item
+      end
+      true
+   end
+
  end
- end
+
