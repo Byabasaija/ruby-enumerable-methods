@@ -81,5 +81,14 @@ end
    result
  end
 
- end
+ def my_inject(initial)
+   my_each do |item|
+      initial = yield(initial, item)
+   end
+   initial
+end
+end
+arr = [1, 2, 3, 4]
+ puts arr.my_count(2)
+
 
