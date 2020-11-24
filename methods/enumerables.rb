@@ -54,5 +54,21 @@ end
       true
    end
 
+ def my_count(arg = nil)
+    count = 0
+    if arg
+      self.my_each do |item|
+        count += 1 if item == arg
+      end
+    elsif block_given?
+      self.my_each do |item|
+        count += 1 if (yield item) == true
+      end
+    else
+     self.my_each do
+        count += 1
+      end
+    end
+    count
+  end
  end
-
