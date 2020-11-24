@@ -8,6 +8,7 @@ module Enumerable
      self
    end
 
+
    def my_each_with_index
       return to_enum(:my_each) unless block_given?
 
@@ -16,6 +17,8 @@ module Enumerable
       end
       self
    end
+
+
   def my_select
    return to_enum(:my_select) unless block_given?
    answer = []
@@ -24,4 +27,14 @@ module Enumerable
      end
    answer
   end
+
+
+  def my_all?
+   self.my_each do |item|
+      if !yield item
+         return false
+      end
+   end
+   return true
+end
 end
