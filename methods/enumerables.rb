@@ -31,10 +31,22 @@ module Enumerable
 
   def my_all?
    self.my_each do |item|
+   return true unless block_given?
       if !yield item
          return false
       end
    end
    return true
 end
-end
+
+def my_any?
+  
+   self.my_each do |item|
+   return true unless block_given?
+      unless yield item
+         return true
+      end
+   end
+   return false
+ end
+ end
