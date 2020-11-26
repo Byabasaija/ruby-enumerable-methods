@@ -41,13 +41,13 @@ To get this project up and running, you must have Ruby installed on your machine
 
 ## Author
 
-👤 **Eric Enaburekhan**
+👤 **Pascal Byabasaija**
 
 - Github: [@Byabasaija](https://github.com/Byabasaija)
 - Twitter: [@byabashaijapoet](https://twitter.com/byabashaijapoet)
 - Linkedin: [Pascal Byabasaija](https://www.linkedin.com/in/pascal-byabasaija-80578814b/)
 
-👤 **Oluwaseun Iyadi**
+👤 **Nihal Mohammed**
 
 - Github: [@apricot12](https://github.com/apricot12)
 - Twitter: [ @apricotfoxtrot](https://twitter.com/apricotfoxtrot)
