@@ -92,8 +92,18 @@ def multiply_els
    self.my_inject(1) { |initial, item| initial * item }
 end
 
+  def my_map(arg = nil)
+   return to_enum if !block_given? && !arg
+
+   self.my_each_with_index do |item, i|
+      self[i] = if arg
+         arg.call(item)
+      else
+         yield item
+      end
+   end
+   self
+ end
 end
 
-puts [2,4,5].multiply_els
-
-
+ 
