@@ -1,6 +1,8 @@
+# rubocop:disable Metrics/ModuleLength,Metrics/PerceivedComplexity,Metrics/CyclomaticComplexity,Metrics/MethodLength
+
 module Enumerable
   def range_return_array(arr)
-    if self.class == Range
+    if instance_of?(Range)
       self
     else
       arr
@@ -47,11 +49,11 @@ module Enumerable
     elsif !block_given? && !arg
       arr.my_each { |item| return false unless item }
       true
-    elsif arg.class == Class
+    elsif arg.instance_of?(Class)
       arr.my_each { |item| return false unless item.is_a? arg }
       true
-    elsif arg.class == Regexp
-      arr.my_each { |item| return false unless item.class =~ arg }
+    elsif arg.instance_of?(Regexp)
+      arr.my_each { |item| return false unless item =~ arg }
       true
     elsif arg.class != Regexp && arg.class != Class
       arr.my_each { |item| return false unless item == arg }
@@ -68,11 +70,11 @@ module Enumerable
     elsif !block_given? && !arg
       arr.my_each { |item| return true if item }
       false
-    elsif arg.class == Class
+    elsif arg.instance_of?(Class)
       arr.my_each { |item| return true if item.is_a? arg }
       false
-    elsif arg.class == Regexp
-      arr.my_each { |item| return true if item.class =~ arg }
+    elsif arg.instance_of?(Regexp)
+      arr.my_each { |item| return true if item =~ arg }
       false
     elsif arg.class != Regexp && arg.class != Class
       arr.my_each { |item| return true if item == arg }
@@ -105,20 +107,21 @@ module Enumerable
   def my_map(arg = nil)
     return to_enum if !block_given? && !arg
 
-    my_each_with_index do |item, i|
-      self[i] = if arg
-                  arg.call(item)
-                else
-                  yield item
-                end
+    arr = clone.to_a
+    arr.my_each_with_index do |item, i|
+      arr[i] = if arg
+                 arg.call(item)
+               else
+                 yield item
+               end
     end
-    self
+    arr
   end
 
   def my_inject(accum = nil, symbol = nil, &block)
-    raise ArgumentError, 'you must provide an symbol or a block' if accum.nil? && symbol.nil? && block.nil?
+    raise LocalJumpError if accum.nil? && symbol.nil? && block.nil?
 
-    raise ArgumentError, 'you must provide either an symbol symbol or a block, not both' if symbol && block
+    raise LocalJumpError, 'you must provide either an symbol symbol or a block, not both' if symbol && block
 
     if symbol.nil? && block.nil?
       symbol = accum
@@ -148,6 +151,8 @@ module Enumerable
     accum
   end
 end
+
+# rubocop:enable Metrics/ModuleLength,Metrics/PerceivedComplexity,Metrics/CyclomaticComplexity,Metrics/MethodLength
 
 def multiply_els(arr)
   arr.my_inject(:*)
