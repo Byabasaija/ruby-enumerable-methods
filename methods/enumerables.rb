@@ -1,6 +1,6 @@
 module Enumerable
   def range_return_array(arr)
-    if self.class == Range 
+    if self.class == Range
       self
     else
       arr
@@ -38,31 +38,50 @@ module Enumerable
     answer
   end
 
-  def my_all?
-    return true unless block_given?
+  def my_all?(arg = nil)
+    arr = to_a
 
-    my_each do |item|
-      return false unless yield item
+    if block_given?
+      arr.my_each { |item| return false unless yield item }
+      true
+    elsif !block_given? && !arg
+      arr.my_each { |item| return false unless item }
+      true
+    elsif arg.class == Class
+      arr.my_each { |item| return false unless item.is_a? arg }
+      true
+    elsif arg.class == Regexp
+      arr.my_each { |item| return false unless item.class =~ arg }
+      true
+    elsif arg.class != Regexp && arg.class != Class
+      arr.my_each { |item| return false unless item == arg }
+      true
     end
-    true
   end
 
-  def my_any?
-    return true unless block_given?
+  def my_any?(arg = nil)
+    arr = to_a
 
-    my_each do |item|
-      return true unless yield item
+    if block_given?
+      arr.my_each { |item| return true if yield item }
+      false
+    elsif !block_given? && !arg
+      arr.my_each { |item| return true if item }
+      false
+    elsif arg.class == Class
+      arr.my_each { |item| return true if item.is_a? arg }
+      false
+    elsif arg.class == Regexp
+      arr.my_each { |item| return true if item.class =~ arg }
+      false
+    elsif arg.class != Regexp && arg.class != Class
+      arr.my_each { |item| return true if item == arg }
+      false
     end
-    false
   end
 
-  def my_none?
-    return true unless block_given?
-
-    my_each do |item|
-      return false if yield item
-    end
-    true
+  def my_none?(arg = nil, &block)
+    !my_any?(arg, &block)
   end
 
   def my_count(arg = nil)
@@ -96,15 +115,40 @@ module Enumerable
     self
   end
 
-  def my_inject(initial = 0)
-    my_each do |item|
-      initial = yield(initial, item)
-    end
-    initial
-  end
+  def my_inject(accum = nil, symbol = nil, &block)
+    raise ArgumentError, 'you must provide an symbol or a block' if accum.nil? && symbol.nil? && block.nil?
 
-  def multiply_els
-    my_inject(1) { |initial, item| initial * item }
+    raise ArgumentError, 'you must provide either an symbol symbol or a block, not both' if symbol && block
+
+    if symbol.nil? && block.nil?
+      symbol = accum
+      accum = nil
+    end
+
+    block = case symbol
+            when Symbol
+              ->(acc, value) { acc.send(symbol, value) }
+            when nil
+              block
+            else
+              raise ArgumentError, 'the symbol provided must be a symbol'
+            end
+
+    if accum.nil?
+      ignore_first = true
+      accum = first
+    end
+
+    index = 0
+
+    each do |item|
+      accum = block.call(accum, item) unless ignore_first && index.zero?
+      index += 1
+    end
+    accum
   end
 end
 
+def multiply_els(arr)
+  arr.my_inject(:*)
+end
