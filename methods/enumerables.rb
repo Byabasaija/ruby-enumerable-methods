@@ -1,27 +1,38 @@
 module Enumerable
+  def range_return_array(arr)
+    if self.class == Range 
+      self
+    else
+      arr
+    end
+  end
+
   def my_each
     return to_enum(:my_each) unless block_given?
 
-    size.times do |index|
-      yield self[index]
+    arr = to_a
+    arr.size.times do |index|
+      yield arr[index]
     end
-    self
+    range_return_array(arr)
   end
 
   def my_each_with_index
     return to_enum(:my_each) unless block_given?
 
-    size.times do |index|
-      yield self[index], index
+    arr = to_a
+    arr.size.times do |index|
+      yield arr[index], index
     end
-    self
+    range_return_array(arr)
   end
 
   def my_select
     return to_enum(:my_select) unless block_given?
 
+    arr = to_a
     answer = []
-    my_each do |item|
+    arr.my_each do |item|
       answer.push(item) if yield item
     end
     answer
@@ -96,3 +107,4 @@ module Enumerable
     my_inject(1) { |initial, item| initial * item }
   end
 end
+
